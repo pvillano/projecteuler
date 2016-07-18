@@ -1,47 +1,57 @@
-#define N 80
+#include <stdio.h>
 #include "82.h"
-int A[N][N];
-int prev[N]
-int S1[N];
-int *temp;
-int i,j, changed;
-for (j = 0; j < N; j++){
-	for(i = 0; i < N; i++){
-		A[i][j] = At[j][i];
-	}
+
+int main(int argc, const char *argv[]) {
+    int A[N][N];
+    int arr1[N];
+    int arr2[N];
+    int *prev = arr1;
+    int *S1 = arr2;
+    int *temp;
+    int y, x, changed;
+
+    for (y = 0; y < N; y++) {
+        for (x = 0; x < N; x++) {
+            A[x][y] = At[y][x];
+        }
+    }
+    for (y = 0; y < N; y++) {
+        prev[y] = 0;
+    }
+    for (x = 0; x < N; x++) {
+        for (y = 0; y < N; y++) {
+            S1[y] = A[x][y] + prev[y];
+        }
+        changed = 1;
+        while (changed) {
+            changed = 0;
+            for (y = 0; y < N - 1; y++) {
+                if (S1[y] + A[x][y + 1] < S1[y + 1]) {
+                    S1[y + 1] = S1[y] + A[x][y + 1];
+                    changed = 1;
+                }
+            }
+        }
+        changed = 1;
+        while (changed) {
+            changed = 0;
+            for (y = N - 1; y > 0; y--){
+                if(S1[y] + A[x][y - 1] < S1[y - 1]) {
+                    S1[y - 1] = S1[y] + A[x][y - 1];
+                    changed = 1;
+                }
+            }
+
+        }
+        temp = S1;
+        S1 = prev;
+        prev = temp;
+        printf("x=%d\n", x);
+    }
+
+    int smallest = prev[0];
+    for (y = 1; y < N; ++y) {
+        smallest = (prev[y] < smallest ? prev[y] : smallest);
+    }
+    printf("%d", smallest);
 }
-for(i = 0; i < N; i++}{
-	prev[i] = 0;
-}
-for (j = 0; j < N; j++){
-	for(i = 0; i < N; i++){
-		S1[i] = A[j][i] + prev[i];
-	}
-	changed = 1;
-	while(changed){
-		changed = 0;
-		for(i = 0; i < N - 1; i++){
-			if(S1[i] + A[j][i] < S1[i+1]){
-				S1[i+1] = S1[i] + A[j][i];
-				changed = 1;
-			}
-			
-			/*
-			an optimisation from
-				if(S1[i+1] + A[j][i+1] < S1[i]){
-					S1[i] = S1[i+1] + A[j][i+1];
-				}
-			that reduces the number of times this loop runs by up to N
-			by allowing better values to propogate upwards within a run of the for loop
-			*/
-			if(S1[N-1-i] + A[j][N-1-i] < S1[N-2-i]){
-				S1[N-2-i] = S1[N-1-i] + A[j][N-1-i];
-				changed = 1;
-			}
-		}
-	}
-	temp = S1;
-	S1 = prev;
-	prev = temp;
-}
-	
