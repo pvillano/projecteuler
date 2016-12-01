@@ -17,3 +17,13 @@ def primes(n):
             sieve[k * k // 3::2 * k] = False
             sieve[k * (k - 2 * (i & 1) + 4) // 3::2 * k] = False
     return np.r_[2, 3, ((3 * np.nonzero(sieve)[0][1:] + 1) | 1)]
+
+
+def sum_proper_divisors_array(n):
+    sum_divisors = np.zeros(n, dtype=int)
+    for i in range(1, n):
+        for j in range(i * 2, n, i):
+            sum_divisors[j] += i
+    return sum_divisors
+
+
